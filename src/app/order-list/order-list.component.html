@@ -1,3 +1,165 @@
-<p>
-  order-list works!
-</p>
+<div>
+  <p class="h4 mb-4 "
+    style="margin: 3%; padding-left: 2%; font-family: fantasy;"
+  >List of Orders and their Details:
+    <br>
+    <button type="button" data-toggle="modal" data-target="#fullHeightModalRight" class="btn btn-mdb-color" 
+      style = "float: right; margin-right: 27px;">
+      Add New Order
+    </button>
+  </p>
+</div>
+
+<div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="orderNumber">
+      <th mat-header-cell *matHeaderCellDef> Order Number </th>
+      <td mat-cell *matCellDef="let element"> {{element.orderNumber}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="orderDueDate">
+      <th mat-header-cell *matHeaderCellDef> Order Due Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.orderDueDate | date: 'medium'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerPhone">
+      <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
+      <td mat-cell *matCellDef="let element"> {{element.customerPhone}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerBuyername">
+      <th mat-header-cell *matHeaderCellDef> Customer Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.customerBuyername}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerAddress">
+      <th mat-header-cell *matHeaderCellDef> Customer Address </th>
+      <td mat-cell *matCellDef="let element"> {{element.customerAddress}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="orderTotal">
+      <th mat-header-cell *matHeaderCellDef> Purchased Amount </th>
+      <td mat-cell *matCellDef="let element"> {{element.orderTotal}} </td>
+    </ng-container>editOrder(element)
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let element">
+        <span> <mat-icon data-toggle="modal" data-target="#editModal" (click)="editOrder(element)" style="cursor: pointer; margin-right: 15px" matTooltip="Edit Order " color="disable">edit</mat-icon>
+        </span>
+        <span> <mat-icon data-toggle="modal" data-target="#centralModalSm" (click)="deleteOrder(element)" style="cursor: pointer;" matTooltip="Delete Order" color="warn"> delete</mat-icon>
+        </span> </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>
+
+
+<!-- Add New Order Modal -->
+<div class="modal fade right" id="fullHeightModalRight" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title w-100" id="myModalLabel">Add New Order</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="addNewOrder" class="text-center border border-light p-5 center" (ngSubmit)="onSubmit()">
+          
+          <p class="myCustomLabel">Select Order Due Date:</p>
+          <input (click)="picker.open()" matInput formControlName="orderDueDate" class="form-control mb-4" required [matDatepicker]="picker" placeholder="Choose a date">
+          <mat-datepicker #picker></mat-datepicker>
+
+          <p class="myCustomLabel">Enter Customers Mobile Number:</p>
+          <input type="text" formControlName="customerPhone" class="form-control mb-4" placeholder="Phone Number" required>
+
+          <p class="myCustomLabel">Enter Customers Name:</p>
+          <input type="text" formControlName="customerBuyername" class="form-control mb-4" placeholder="Customer Name" required>
+
+          <p class="myCustomLabel">Enter Customers Delivery Address:</p>
+          <input type="text" formControlName="customerAddress" class="form-control mb-4" placeholder="Address" required>
+
+          <p class="myCustomLabel"> Enter Purchase Amount:</p>
+          <input type="text" formControlName="orderTotal" class="form-control mb-4" placeholder="Total" required>
+
+          <button  (click)="onSubmit()" data-dismiss="modal" mdbBtn class="my-4 btn-unique" type="submit" [disabled]="!addNewOrder.valid">Add Order</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Delete Order modal -->
+<div class="modal fade" id="centralModalSm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+
+<!-- Change class .modal-sm to change the size of the modal -->
+<div class="modal-dialog modal-sm" role="document">
+
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title w-100" id="myModalLabel">Confirmation Alert!</h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="deleteModal">
+      Are you sure you want to delete the order and it's details permanently?
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="confirmDelete()">Delete Order</button>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- Edit Order Details model -->
+<div class="modal fade right" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title w-100" id="myModalLabel"> Update Order Details</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="updateExistingOrder" class="text-center border border-light p-5 center" (ngSubmit)="updateOrderDetails()">
+          <p class="myCustomLabel"> Order Due Date:</p>
+          <input (click)="editPicker.open()" matInput formControlName="orderDueDate" class="form-control mb-4"  required [matDatepicker]="editPicker" placeholder="Choose a date">
+          <mat-datepicker #editPicker></mat-datepicker>
+          
+          <p class="myCustomLabel"> Mobile Number:</p>
+          <input type="text" formControlName="customerPhone" class="form-control mb-4" placeholder="Phone Number" required>
+
+          <p class="myCustomLabel"> Customer Name:</p>
+          <input type="text" formControlName="customerBuyername" class="form-control mb-4" placeholder="Customer Name" required>
+
+          <p class="myCustomLabel"> Customer Address:</p>
+          <input type="text" formControlName="customerAddress" class="form-control mb-4" placeholder="Address" required>
+
+          <p class="myCustomLabel"> Purchased Amount:</p>
+          <input type="text" formControlName="orderTotal" class="form-control mb-4" placeholder="Total" required>
+
+          <button  (click)="updateOrderDetails()" data-dismiss="modal" style = "color: cornsilk;" mdbBtn class="my-4 aqua-gradient" type="submit" [disabled]="!updateExistingOrder.valid">Update Order</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

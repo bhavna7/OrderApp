@@ -1,0 +1,40 @@
+table  {
+    width: 90%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 10% auto;
+}
+
+table.mat-table {
+    border-spacing: 0;
+    border-style: outset;
+    border-color: darkgray;
+}
+
+.mat-header-cell {
+    font-family: fantasy;
+    font-style: oblique;
+    font-weight: bolder;
+}
+
+::ng-deep .cdk-overlay-container {
+    z-index: 1200 !important;
+}
+
+.deleteModal {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1rem;
+    font-family: serif;
+    font-style: oblique;
+}
+
+.myCustomLabel {
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    font-family: fantasy;
+}
